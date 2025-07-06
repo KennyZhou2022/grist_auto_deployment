@@ -1,0 +1,4 @@
+FROM gristlabs/grist
+
+RUN apt-get update && apt-get install -y openssl && \
+    python3 -m pip install requests numpy beautifulsoup4 jinja2 pandas selenium

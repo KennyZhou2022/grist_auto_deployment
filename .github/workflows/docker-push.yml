@@ -1,0 +1,45 @@
+name: Build and Push Multiple Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 2 * * 6'  # minute, hour, day, month, 0~6: 0-Sunday.
+
+env:
+  DOCKERHUB_REPO1: kenny2023/grist
+  DOCKERHUB_REPO2: kenny2023/grist-omnibus
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push custom-grist-oss
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile_grist
+          push: true
+          tags: ${{ env.DOCKERHUB_REPO1 }}:latest
+
+      - name: Build and push custom-grist-omnibus
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile_grist_omnibus
+          push: true
+          tags: ${{ env.DOCKERHUB_REPO2 }}:latest
