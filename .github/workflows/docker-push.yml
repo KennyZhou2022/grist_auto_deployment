@@ -6,7 +6,8 @@ on:
       - main
   schedule:
     - cron: '0 2 * * 6'  # minute, hour, day, month, 0~6: 0-Sunday.
-
+  workflow_dispatch:
+  
 env:
   DOCKERHUB_REPO1: kenny2023/grist
   DOCKERHUB_REPO2: kenny2023/grist-omnibus
